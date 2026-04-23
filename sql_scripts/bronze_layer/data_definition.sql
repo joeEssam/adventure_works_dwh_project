@@ -4,8 +4,8 @@
     Purpose: Create staging tables for raw data ingestion from source systems
     
     ⚠️  WARNING: This script will DROP and RECREATE all bronze layer tables.
-         All existing data in these tables will be permanently deleted.
-         Ensure backups are available before executing this script.
+            All existing data in these tables will be permanently deleted.
+            Ensure backups are available before executing this script.
 ================================================================================
 */
 
