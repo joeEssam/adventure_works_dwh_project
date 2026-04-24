@@ -1,11 +1,63 @@
 /*
 ================================================================================
-    BRONZE LAYER - DATA LOAD SCRIPT
-    Purpose: Load raw data from CSV files into bronze layer staging tables
+    FILE: bronze_data_load.sql
+    LAYER: Bronze (Staging Layer)
+    PURPOSE:
+        This script defines and orchestrates the ETL process for loading raw data 
+        from CSV files into the Bronze layer staging tables. The Bronze layer serves 
+        as the initial landing zone for source data, preserving data in its raw format 
+        before transformation in subsequent layers (Silver and Gold).
+
+    CONTENTS:
+        - Procedure: bronze.load_bronze
+            Loads data from two sources (CRM and ERP systems) into 6 bronze tables:
+            
+            CRM Source:
+                1. bronze.crm_cust_info       - Customer information
+                2. bronze.crm_prd_info        - Product information
+                3. bronze.crm_sales_details   - Sales transaction details
+            
+            ERP Source:
+                4. bronze.erp_cust_az12       - ERP customer master data
+                5. bronze.erp_loc_a101        - Location/geography data
+                6. bronze.erp_px_cat_g1v2     - Product category master data
+
+    HOW TO USE:
+        1. Prerequisites:
+           - Ensure the Bronze schema and all staging tables are created 
+             (see: bronze_data_definition.sql)
+           - Verify that CSV file paths are accessible and correctly configured
+           - Update file paths if datasets are moved to a different location
+        
+        2. Execution:
+           - Execute the stored procedure with: EXEC bronze.load_bronze;
+           - The procedure will automatically:
+             * Truncate existing data from each staging table
+             * Load fresh data from CSV files
+             * Report loading duration for each table and total batch time
+             * Display sample records for verification
+             * Catch and report any errors during the load process
+
+    PERFORMANCE NOTES:
+        - Uses BULK INSERT for efficient data loading
+        - TABLOCK hint is applied for table-level locking
+        - FIRSTROW = 2 skips CSV headers
+        - Timing information is logged for each table and batch operation
+
+    ERROR HANDLING:
+        - Uses TRY-CATCH block to capture and report errors
+        - Error details include message, error number, and severity level
+        - Execution stops on first error to prevent partial data loads
+
+    DEPENDENCIES:
+        - SQL Server 2016 or later (for CREATE OR ALTER syntax)
+        - Bronze layer schema and tables must exist
+        - CSV files must be accessible from SQL Server file system
+
 ================================================================================
 */
 
--- Call the procedure to execute the data load process
+-- EXECUTION EXAMPLE:
 --   EXEC bronze.load_bronze;
 
 CREATE OR ALTER PROCEDURE bronze.load_bronze
