@@ -24,7 +24,7 @@ SELECT TOP (1000)
     ,[cst_marital_status]
     ,[cst_gndr]
     ,[cst_create_date]
-FROM [data_warehouse].[silver].[crm_cust_info] ;
+FROM [data_warehouse].[bronze].[crm_cust_info] ;
 
 -- =============================================================================
 -- CRM SALES DATA EXPLORATION
@@ -41,7 +41,7 @@ SELECT TOP (1000)
     ,[sls_sales]
     ,[sls_quantity]
     ,[sls_price]
-FROM [data_warehouse].[silver].[crm_sales_details] ;
+FROM [data_warehouse].[bronze].[crm_sales_details] ;
 
 -- =============================================================================
 -- CRM PRODUCT DATA EXPLORATION
@@ -56,7 +56,7 @@ SELECT TOP (1000)
     ,[prd_line]
     ,[prd_start_dt]
     ,[prd_end_dt]
-FROM [data_warehouse].[silver].[crm_prd_info] ;
+FROM [data_warehouse].[bronze].[crm_prd_info] ;
 
 -- =============================================================================
 -- ERP CUSTOMER DATA EXPLORATION
@@ -67,7 +67,7 @@ SELECT TOP (1000)
     [CID]
     ,[BDATE]
     ,[GEN]
-FROM [data_warehouse].[silver].[erp_cust_az12] ;
+FROM [data_warehouse].[bronze].[erp_cust_az12] ;
 
 -- =============================================================================
 -- ERP LOCATION DATA EXPLORATION
@@ -77,7 +77,7 @@ FROM [data_warehouse].[silver].[erp_cust_az12] ;
 SELECT TOP (1000)
     [CID]
     ,[CNTRY]
-FROM [data_warehouse].[silver].[erp_loc_a101] ;
+FROM [data_warehouse].[bronze].[erp_loc_a101] ;
 
 -- =============================================================================
 -- ERP PRODUCT CATEGORY DATA EXPLORATION
@@ -89,4 +89,4 @@ SELECT TOP (1000)
     ,[CAT]
     ,[SUBCAT]
     ,[MAINTENANCE]
-FROM [data_warehouse].[silver].[erp_px_cat_g1v2] ;
+FROM [data_warehouse].[bronze].[erp_px_cat_g1v2] ;
