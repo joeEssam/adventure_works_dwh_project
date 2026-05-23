@@ -1,20 +1,20 @@
 /*
 ================================================================================
-    SILVER LAYER - DATA QUALITY CHECKING SCRIPT
+    SILVER LAYER - DATA QUALITY VALIDATION SCRIPT
     Purpose: Validate data integrity and identify quality issues in silver layer
     
-    This script performs comprehensive data quality checks including:
-    - Duplicate detection and null validation
+    Checks performed:
+    - Duplicate and null value detection
     - Text field trimming verification
     - Referential integrity validation
     - Business logic and calculation verification
     - Date range and format validation
-    - Anomaly detection and profiling
+    - Data profiling and anomaly detection
 ================================================================================
 */
 
 USE data_warehouse;
-SET NOCOUNT ON;  -- Suppress "rows affected" messages for cleaner output
+SET NOCOUNT ON;
 
 -- =============================================================================
 -- CRM CUSTOMER DATA QUALITY CHECKS
@@ -43,15 +43,15 @@ SELECT cst_gndr
 FROM silver.crm_cust_info
 WHERE cst_gndr != TRIM(cst_gndr);
 
--- Profile distinct gender values in customer data
+-- Profile distinct gender values
 SELECT DISTINCT cst_gndr
 FROM silver.crm_cust_info;
 
--- Profile distinct marital status values in customer data
+-- Profile distinct marital status values
 SELECT DISTINCT cst_marital_status
 FROM silver.crm_cust_info;
 
--- Display all customer records for visual inspection
+-- Display all customer records
 SELECT *
 FROM silver.crm_cust_info;
 
@@ -59,7 +59,7 @@ FROM silver.crm_cust_info;
 -- CRM PRODUCT DATA QUALITY CHECKS
 -- =============================================================================
 
--- Display all product records for visual inspection
+-- Display all product records
 SELECT *
 FROM silver.crm_prd_info;
 
@@ -151,3 +151,79 @@ WHERE sls_sales != (sls_quantity * sls_price)
     OR sls_quantity <= 0 OR sls_quantity IS NULL
     OR sls_price <= 0 OR sls_price IS NULL
 ORDER BY sls_sales, sls_quantity, sls_price;
+
+-- =============================================================================
+-- ERP CUSTOMER DATA QUALITY CHECKS (AZ12 EXTRACT)
+-- =============================================================================
+
+-- Check for customer IDs not in CRM customer master
+SELECT
+    CID,
+    BDATE,
+    GEN
+FROM [data_warehouse].silver.[erp_cust_az12]
+WHERE CID NOT IN (SELECT cst_key FROM silver.crm_cust_info); 
+
+-- Check for invalid birth dates outside acceptable range
+SELECT *
+FROM [data_warehouse].silver.[erp_cust_az12]
+WHERE BDATE NOT BETWEEN '1900-01-01' AND '2024-12-31';
+
+
+-- Check for untrimmed gender values
+SELECT *
+FROM [data_warehouse].silver.[erp_cust_az12]
+WHERE GEN != TRIM(GEN);
+
+-- Profile distinct gender values
+SELECT DISTINCT GEN FROM [data_warehouse].silver.[erp_cust_az12];
+
+-- Check for invalid gender values (should be Male, Female, or n/a)
+SELECT *
+FROM [data_warehouse].silver.[erp_cust_az12]
+WHERE TRIM(GEN) NOT IN ('Male', 'Female', 'n/a');
+
+-- =============================================================================
+-- ERP LOCATION DATA QUALITY CHECKS (A101 EXTRACT)
+-- =============================================================================
+
+-- Check for null or missing CID or CNTRY values
+SELECT *
+FROM [data_warehouse].silver.[erp_loc_a101]
+WHERE CID IS NULL OR CNTRY IS NULL;
+
+-- Check for untrimmed country values
+SELECT *
+FROM [data_warehouse].silver.[erp_loc_a101]
+WHERE CNTRY != TRIM(CNTRY);
+
+-- Profile distinct country values
+SELECT DISTINCT CNTRY FROM [data_warehouse].silver.[erp_loc_a101];
+
+-- Check for untrimmed CID values
+SELECT *
+FROM [data_warehouse].silver.[erp_loc_a101]
+WHERE CID != TRIM(CID);
+
+-- =============================================================================
+-- ERP PRODUCT CATEGORY DATA QUALITY CHECKS (PX_CAT_G1V2 EXTRACT)
+-- =============================================================================
+
+-- Check for product categories not in CRM product master
+SELECT *
+FROM [data_warehouse].silver.[erp_px_cat_g1v2]
+WHERE ID NOT IN (SELECT prd_cat FROM [data_warehouse].silver.crm_prd_info);
+
+-- Check for untrimmed values in category fields
+SELECT *
+FROM [data_warehouse].silver.[erp_px_cat_g1v2]
+WHERE ID != TRIM(ID) OR CAT != TRIM(CAT) OR SUBCAT != TRIM(SUBCAT) OR MAINTENANCE != TRIM(MAINTENANCE);
+
+-- Profile distinct category values
+SELECT DISTINCT CAT FROM [data_warehouse].silver.[erp_px_cat_g1v2];
+
+-- Profile distinct subcategory values
+SELECT DISTINCT SUBCAT FROM [data_warehouse].silver.[erp_px_cat_g1v2];
+
+-- Profile distinct maintenance values
+SELECT DISTINCT MAINTENANCE FROM [data_warehouse].silver.[erp_px_cat_g1v2];
