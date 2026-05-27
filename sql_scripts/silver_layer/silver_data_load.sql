@@ -202,7 +202,7 @@ BEGIN
             END AS BDATE,
             CASE WHEN UPPER(GEN) IN ('M', 'MALE') THEN 'Male'
                 WHEN UPPER(GEN) IN ('F', 'FEMALE') THEN 'Female'
-                ELSE 'n\a'
+                ELSE 'n/a'
             END AS GEN
         FROM data_warehouse.bronze.erp_cust_az12;
         
@@ -230,7 +230,7 @@ BEGIN
             REPLACE([CID], '-', '') AS CID,
             CASE WHEN TRIM(CNTRY) IN ('US', 'USA') THEN 'United States'
                 WHEN UPPER(CNTRY) = 'DE' THEN 'Germany'
-                WHEN CNTRY IS NULL OR TRIM(CNTRY) = '' THEN 'n\a'
+                WHEN CNTRY IS NULL OR TRIM(CNTRY) = '' THEN 'n/a'
                 ELSE TRIM(CNTRY)
             END AS CNTRY
         FROM data_warehouse.bronze.erp_loc_a101;

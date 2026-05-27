@@ -47,11 +47,11 @@ WHERE cst_gndr != TRIM(cst_gndr);
 SELECT DISTINCT cst_gndr
 FROM silver.crm_cust_info;
 
--- Profile distinct marital status values
+-- Profile distinct marital status values in customer data
 SELECT DISTINCT cst_marital_status
 FROM silver.crm_cust_info;
 
--- Display all customer records
+-- Display all customer records for visual inspection
 SELECT *
 FROM silver.crm_cust_info;
 
@@ -59,7 +59,7 @@ FROM silver.crm_cust_info;
 -- CRM PRODUCT DATA QUALITY CHECKS
 -- =============================================================================
 
--- Display all product records
+-- Display all product records for visual inspection
 SELECT *
 FROM silver.crm_prd_info;
 
