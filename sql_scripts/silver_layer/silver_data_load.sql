@@ -82,7 +82,7 @@ BEGIN
 
         INSERT INTO silver.crm_prd_info (
             prd_id,
-            prd_cat,
+            prd_cat_id,
             prd_key,
             prd_key_without_cat,
             prd_nm,
@@ -93,7 +93,7 @@ BEGIN
         )
         SELECT
             prd_id,
-            REPLACE(SUBSTRING(prd_key, 1, 5), '-', '_') AS prd_cat,
+            REPLACE(SUBSTRING(prd_key, 1, 5), '-', '_') AS prd_cat_id,
             TRIM(prd_key) AS prd_key,
             SUBSTRING(prd_key, 7, LEN(prd_key)) AS prd_key_without_cat,
             TRIM(prd_nm) AS prd_nm,
@@ -289,7 +289,7 @@ BEGIN
     END TRY
     BEGIN CATCH
         PRINT('================================================================================');
-        PRINT('Error occurred during bronze layer data load');
+        PRINT('Error occurred during silver layer data load');
         PRINT('Error Message: ' + ERROR_MESSAGE());
         PRINT('Error Number: ' + CAST(ERROR_NUMBER() AS NVARCHAR(10)));
         PRINT('Error Severity: ' + CAST(ERROR_SEVERITY() AS NVARCHAR(10)));

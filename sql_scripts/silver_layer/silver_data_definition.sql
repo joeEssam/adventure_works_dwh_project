@@ -37,7 +37,7 @@ IF OBJECT_ID('silver.crm_prd_info', 'U') IS NOT NULL
 
 CREATE TABLE silver.crm_prd_info (
     prd_id              INT,
-    prd_cat             NVARCHAR(10),
+    prd_cat_id          NVARCHAR(10),
     prd_key             NVARCHAR(30),
     prd_key_without_cat NVARCHAR(30),
     prd_nm              NVARCHAR(50),
