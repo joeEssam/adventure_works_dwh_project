@@ -64,7 +64,7 @@ This catalog documents the tables and views in the Gold Layer of the Adventure W
 **Schema:** `gold`  
 **Type:** Dimension Table  
 **Source:** Silver layer (crm_cust_info, erp_cust_az12, erp_loc_a101)  
-**Purpose:** Customer master data for analysis and segmentation of sales by customer attributes.
+**Purpose:** Customer master data for analysis and segmentation of sales by customer attributes with the demographic and geographic information .
 
 | Column | Data Type | Description | Key Type |
 |--------|-----------|-------------|----------|
